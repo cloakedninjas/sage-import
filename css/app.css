@@ -1,4 +1,8 @@
 .week {
     display: inline-block;
-    width: 200px;
+    width: 180px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px #333 solid;
+    background: #f0f0f0;
 }

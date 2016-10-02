@@ -1,40 +1,40 @@
 var WeeklySheetView = BaseView.extend({
 
   weekTemplate: `
-    <div class="week col-md-4 col-xs-2">
+    <div class="week" data-week-num="<%= week_num %>">
       <div class="form-group">
         <label for="date">Date</label>
-        <input type="date" class="form-control" id="date" />
+        <input type="date" class="form-control date" value="<%= date %>" />
       </div>
       
       <div class="form-group">
         <label for="date">Purchases</label>
-        <input type="number" class="form-control" id="purchases" step="0.01" />
+        <input type="number" class="form-control purchases vatable" step="0.01" />
       </div>
       
       <div class="form-group">
         <label for="date">Windows</label>
-        <input type="number" class="form-control" id="windows" step="0.01" value="<%= windowCleaning %>" />
+        <input type="number" class="form-control windows vatable" step="0.01" value="<%= windowCleaning %>" />
       </div>
       
       <div class="form-group">
         <label for="date">Wages</label>
-        <input type="number" class="form-control" id="wages" step="0.01" />
+        <input type="number" class="form-control wages vatable" step="0.01" />
       </div>
       
       <div class="form-group">
         <label for="date">VAT Bank</label>
-        <input type="number" class="form-control" id="vat-bank" step="0.01" />
+        <input type="number" class="form-control vat-bank vatable" step="0.01" />
       </div>
       
       <div class="form-group">
         <label for="date">No VAT Bank</label>
-        <input type="number" class="form-control" id="no-vat-bank" step="0.01" />
+        <input type="number" class="form-control no-vat-bank" step="0.01" />
       </div>
       
       <div class="form-group">
         <label for="date">Tot VAT</label>
-        <input type="number" class="form-control" id="tot-vat" step="0.01" />
+        <input type="number" class="form-control tot-vat" step="0.01" readonly />
       </div>
     </div>
   `,
@@ -46,14 +46,22 @@ var WeeklySheetView = BaseView.extend({
   </form>`,
 
   events: {
-    'submit form': 'handleFormSubmit'
+    'submit form': 'handleFormSubmit',
+    'keyup input.vatable': 'handleInputEntry'
   },
 
+  /**
+   * @type Date
+   */
   startDate: null,
-  weekCount: null,
+
+  /**
+   * @type number
+   */
+  weekCount: 0,
 
   initialize: function (opts) {
-    this.startDate = opts['start-date'];
+    this.startDate = new Date(opts['start-date']);
     this.weekCount = parseInt(opts['week-count']);
   },
 
@@ -61,6 +69,8 @@ var WeeklySheetView = BaseView.extend({
     var html = '';
     for (var i = 0; i < this.weekCount; i++) {
       html += _.template(this.weekTemplate)({
+        week_num: i + 1,
+        date: this.getDateForWeekNum(this.startDate, i).toISOString().substring(0, 10),
         windowCleaning: app.config.windowCleaning
       });
     }
@@ -70,9 +80,35 @@ var WeeklySheetView = BaseView.extend({
     };
   },
 
+  /**
+   *
+   * @param {Date} startDate
+   * @param {number} weekNum
+   * @returns {Date}
+   */
+  getDateForWeekNum: function (startDate, weekNum) {
+    var date = new Date(startDate);
+    date.setDate(date.getDate() + (weekNum * 7));
+    return date;
+  },
+
   handleFormSubmit: function (e) {
     e.preventDefault();
     console.log(1);
+  },
+
+  handleInputEntry: function (e) {
+    var weeklySheet = e.target.closest('.week'),
+        inputs = weeklySheet.querySelectorAll('input.vatable'),
+        tot = 0;
+
+    for (var i = 0, len = inputs.length; i < len; i++) {
+      if (inputs[i].value !== '') {
+        tot += parseFloat(inputs[i].value);
+      }
+    }
+
+    weeklySheet.querySelector('.tot-vat').value = tot.toFixed(2);
   }
 
 

@@ -1,5 +1,5 @@
 var BaseView = Backbone.View.extend({
-  template: '<div>ASDA</div>',
+  template: '',
 
   render: function () {
     var template = _.template(this.template)(this.getTemplateVars());

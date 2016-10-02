@@ -3,11 +3,11 @@ var StartView = BaseView.extend({
 <form>
   <div class="form-group">
     <label for="start-date">Start Date</label>
-    <input type="date" class="form-control" id="start-date" />
+    <input type="date" class="form-control" id="start-date" value="2010-10-10"/>
   </div>
   <div class="form-group">
     <label for="week-count">No. of weeks</label>
-    <input type="number" class="form-control" id="week-count" />
+    <input type="number" class="form-control" id="week-count" value="7"/>
   </div>
     <button type="submit" class="btn btn-default">Engage!</button>
   </form>`,

@@ -94,7 +94,24 @@ var WeeklySheetView = BaseView.extend({
 
   handleFormSubmit: function (e) {
     e.preventDefault();
-    console.log(1);
+
+    var weeklySheets = document.querySelectorAll('.week'),
+        fields = ['date', 'purchases', 'windows', 'wages', 'vat-bank', 'no-vat-bank', 'tot-vat'],
+        data = [],
+        ws, initOptions;
+
+    for (var i = 0, len = weeklySheets.length; i < len; i++) {
+      ws = weeklySheets[i];
+      initOptions = {};
+
+      fields.forEach(function (field) {
+        initOptions[field] = ws.querySelector('.' + field).value;
+      });
+
+      data.push(new WeeklySheetModel(initOptions));
+    }
+
+    WeeklySheetModel.generateCSV(data);
   },
 
   handleInputEntry: function (e) {

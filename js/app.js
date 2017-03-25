@@ -3,19 +3,32 @@ $(document).ready(function () {
     config: {
       windowCleaning: 8
     },
+
     routes: {
-      "": "homepage"
+      '': 'index',
+      'weekly-sheets': 'initWeeklySheets',
+      'bank-payments': 'initBankPayments'
     },
 
     initialize: function () {
       this.appFrame = document.getElementById('app');
-      Backbone.history.start({pushState: true});
+      Backbone.history.start();
     },
 
-    homepage: function () {
+    index: function () {
+      this.setView(new IndexView());
+    },
+
+    initWeeklySheets: function () {
       var startView = new StartView();
       startView.on('submit', this.collectWeeklySheets, this);
       this.setView(startView);
+    },
+
+    initBankPayments: function () {
+      var bankView = new BankPaymentsView();
+      //bankView.on('submit', this.collectWeeklySheets, this);
+      this.setView(bankView);
     },
 
     collectWeeklySheets: function (data) {
